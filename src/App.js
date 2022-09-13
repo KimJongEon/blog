@@ -39,7 +39,7 @@ function App() {
         }
       }>글 수정
       </button>
-      
+
       <button onClick={
         () => {
           let sortCopy = [...postTitle];
