@@ -50,7 +50,7 @@ function App() {
         }
       }>글 정렬
       </button>
-
+      <h1>git test</h1>
 
       <div className="list">
         <h4>
