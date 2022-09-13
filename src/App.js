@@ -12,6 +12,7 @@ function App() { // <- 이것도 컴포넌트
   // 자주 변경 될 데이터를 state를 이용해 바인딩 한다. 
   let [postTitle, setPostTitle] = useState(['남자 코트 추천', '강남 우동 맛집', '파이썬독학']);
   let [like, setLike] = useState(0); // set*** : state 변경 함수
+  let [modal, setModal] = useState(false); //modal창이 안보이는 상태(기본) : false
 
 
   return (
@@ -50,7 +51,7 @@ function App() { // <- 이것도 컴포넌트
         }
       }>글 정렬
       </button>
-      <h1>git test1</h1>
+
 
       <div className="list">
         <h4>
@@ -68,18 +69,35 @@ function App() { // <- 이것도 컴포넌트
       </div>
 
       <div className="list">
-        <h4>{postTitle[2]}</h4>
+        <h4 onClick={() => {
+          if(modal == false){
+            setModal(true);
+          } else {
+            setModal(false);
+          }
+        }} >{postTitle[2]}</h4>
         <p>2월 17일 발행
         </p>
       </div>
 
-      <Modal></Modal>
+      {/* 동적 UI */}
+
+      {
+        //html 안에선 if문 대신 삼항연산자 사용
+        // 조건식 ? 참일 때 실행할 코드 : 거짓일 때 실행할 코드
+        modal == true ? <Modal /> : null
+      }
+
+
+
+
+
 
       <Nav></Nav>
       <Footer></Footer>
 
 
-    </div> // App End
+    </div > // App End
   ); // return() End
 }
 
@@ -93,6 +111,11 @@ function App() { // <- 이것도 컴포넌트
 // 1. 반복적인 html 축약할 때
 // 2. 큰 페이지들을 컴포넌트로 만들고 사용
 // 3. 자주 변경되는 html을 컴포넌트로 만들고 사용
+
+// 동적 UI 만들기
+// 1. html css로 미리 디자인 완성
+// 2. UI의 현재 상태를 state로 저장
+// 3. state에 따라 UI가 어떻게 보일지 작성
 function Modal() {
   return (
     <>
@@ -105,20 +128,25 @@ function Modal() {
   ) // return EnD
 }
 
-function Nav(){
-  return(
+
+// 내가 만들어 본 컴포넌트
+function Nav() {
+  return (
     <>
       <div>Nav 입니다.</div>
     </>
   )
 }
 
-function Footer(){
-  return(
+function Footer() {
+  return (
     <>
       <p>제작 : 김종언</p>
     </>
   )
 }
+
+
+
 
 export default App;
