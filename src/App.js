@@ -13,7 +13,7 @@ function App() { // <- 이것도 컴포넌트
   let [postTitle, setPostTitle] = useState(['남자 코트 추천', '강남 우동 맛집', '파이썬독학']);
   let [like, setLike] = useState([0, 0, 0]); // set*** : state 변경 함수
   let [modal, setModal] = useState(false); //modal창이 안보이는 상태(기본) : false
-
+  
   return (
     <div className="App">
       <div className="black-nav">
@@ -58,17 +58,16 @@ function App() { // <- 이것도 컴포넌트
         postTitle.map(function (a, i) { // i는 반복문 돌 때 마다 0부터 1씩 증가하는 정수
           return (
             <div className="list" key={i}>
-              <h4>{postTitle[i]}
-                <span onClick={()=>{
-                  let likeCopy = {...like};
-                  likeCopy[i] = likeCopy[i] + 1; 
-                  setLike(likeCopy)
-                  
+              <h4 onClick={ ()=>{setModal(true)}} >{postTitle[i]}
+                <span onClick={() => {
+                    let likeCopy = { ...like };
+                    likeCopy[i] = likeCopy[i] + 1;
+                    setLike(likeCopy)
                   }}>👍</span>{like[i]}
               </h4>
               <p>2월 17일 발행</p>
             </div>
-             
+
           )
         })
       }
@@ -77,7 +76,7 @@ function App() { // <- 이것도 컴포넌트
       {
         //html 안에선 if문 대신 삼항연산자 사용
         // 조건식 ? 참일 때 실행할 코드 : 거짓일 때 실행할 코드
-        modal == true ? <Modal /> : null
+        modal == true ? <Modal setPostTitle={setPostTitle} color={"yellow"} postTitle={postTitle} /> : null
       }
 
       <Nav></Nav>
@@ -103,13 +102,20 @@ function App() { // <- 이것도 컴포넌트
 // 1. html css로 미리 디자인 완성
 // 2. UI의 현재 상태를 state로 저장
 // 3. state에 따라 UI가 어떻게 보일지 작성
-function Modal() {
+
+function Modal(props) {
+  // props.postTitle.map(function(a, i){
+  // })
   return (
     <>
-      <div className="modal">
-        <h4>글제목</h4>
+      <div className="modal" style={{background : props.color}}>
+        <h4>{props.postTitle[0]}</h4>
         <p>날짜</p>
         <p>상세내용</p>
+        <button onClick={ ()=>{ 
+          let postTitleCopy = [...props.postTitle];
+          postTitleCopy[0] = '여자코트 추천';
+          props.setPostTitle(postTitleCopy) }}>글 수정</button>
       </div>
     </>
   ) // return EnD
