@@ -13,7 +13,8 @@ function App() { // <- 이것도 컴포넌트
   let [postTitle, setPostTitle] = useState(['남자 코트 추천', '강남 우동 맛집', '파이썬독학']);
   let [postContent, setPostContent] = useState(['여기 코트 좋아요', '우동 맛집이네요', '열심히 해봅시다.']);
   let [postDate, setPostDate] = useState(['2022-04-11', '2022-05-06', '2022-07-19']);
-
+  let [inputValue, setInputValue] = useState('');
+  
 
   let [like, setLike] = useState([0, 0, 0]); // set*** : state 변경 함수
   let [modal, setModal] = useState(false); //modal창이 안보이는 상태(기본) : false
@@ -64,14 +65,25 @@ function App() { // <- 이것도 컴포넌트
           return (
             <div className="list" key={i}>
               <h4 onClick={ ()=>{setModal(true); setPostIDX(i); } } >{postTitle[i]}
-                <span onClick={() => {
+                <span onClick={(e) => {
+                    e.stopPropagation(); // 이벤트 버블링 막아준다; 이벤트 실행시 상위 태그까지 실행되는것 없으면, 이벤트가 div까지 전달됨
                     let likeCopy = { ...like };
                     likeCopy[i] = likeCopy[i] + 1;
-                    setLike(likeCopy)
+                    setLike(likeCopy);
+
                   }}>👍</span>{like[i]}
               </h4>
-              <p>{postContent[i]}</p>
-              <p>{postDate[i]}</p>
+              <p>2022-08-08</p>
+              <button onClick={ ()=>{
+                  let postTitleCopy = [...postTitle]; // deep copy
+                  postTitleCopy.splice(i, 1); // splice 해당 글의 배열 i부터 1개만 삭제
+                  
+                  setPostTitle(postTitleCopy); // 삭제된 글을 postTitle에 바인딩?
+                } // arrow function End
+              }>삭제</button>
+              
+              {/* <p>{postContent[i]}</p>
+              <p>{postDate[i]}</p> */}
             </div>
           )
           // return console.log(a, i)
@@ -79,6 +91,23 @@ function App() { // <- 이것도 컴포넌트
         })
         
       }
+
+      <input onChange={(e)=>{
+        setInputValue(e.target.value); // 사용자가 입력한 값을 inputValue state 변수에 담는다
+        }
+      }></input>
+
+      <button onClick={()=>{
+        let postTitleCopy = [...postTitle]; // deep copy
+        postTitleCopy.unshift(inputValue); // deep copy 한 배열에 inputValue 추가
+
+        let likeCopy = [...like]; // deep copy
+        likeCopy.unshift(0); // deep copy 한 배열에 0 추가
+
+        setLike(likeCopy);
+        setPostTitle(postTitleCopy);
+        }
+      }>글 발행</button>
 
       {/* 동적 UI */}
       {
@@ -124,8 +153,10 @@ function Modal(props) {
     <>
       <div className="modal" style={{background : props.color}}>
         <h4>{props.postTitle[props.postIDX]}</h4>
-        <p>{props.postContent[props.postIDX]}</p>
-        <p>{props.postDate[props.postIDX]}</p>
+        <p>2022-08-08</p>
+
+        {/* <p>{props.postContent[props.postIDX]}</p>
+        <p>{props.postDate[props.postIDX]}</p> */}
 
         <button onClick={ ()=>{ 
           let postTitleCopy = [...props.postTitle];
