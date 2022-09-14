@@ -11,17 +11,16 @@ function App() { // <- 이것도 컴포넌트
   // state 쓰던 html 자동 재렌더링 됨
   // 자주 변경 될 데이터를 state를 이용해 바인딩 한다. 
   let [postTitle, setPostTitle] = useState(['남자 코트 추천', '강남 우동 맛집', '파이썬독학']);
-  let [like, setLike] = useState(0); // set*** : state 변경 함수
+  let [like, setLike] = useState([0, 0, 0]); // set*** : state 변경 함수
   let [modal, setModal] = useState(false); //modal창이 안보이는 상태(기본) : false
 
-
   return (
-
     <div className="App">
       <div className="black-nav">
         <h4 style={{ color: 'yellow', fontSize: '1rem' }}>블로그</h4>
       </div>
 
+      {/* 글 수정 버튼 */}
       <button onClick={
         () => {
           // array, object 특징
@@ -41,6 +40,7 @@ function App() { // <- 이것도 컴포넌트
       }>글 수정
       </button>
 
+      {/* 글 정렬 버튼 */}
       <button onClick={
         () => {
           let sortCopy = [...postTitle];
@@ -53,45 +53,32 @@ function App() { // <- 이것도 컴포넌트
       </button>
 
 
-      <div className="list">
-        <h4>
-          {postTitle[0]}
-          <span onClick={() => { setLike(like + 1) }}>👍</span> {like}
-        </h4>
-
-        <p>2월 17일 발행</p>
-      </div>
-
-      <div className="list">
-        <h4>{postTitle[1]}</h4>
-        <p>2월 17일 발행
-        </p>
-      </div>
-
-      <div className="list">
-        <h4 onClick={() => {
-          if(modal == false){
-            setModal(true);
-          } else {
-            setModal(false);
-          }
-        }} >{postTitle[2]}</h4>
-        <p>2월 17일 발행
-        </p>
-      </div>
+      {/* 비슷한 html 반복생성하려면 map() 쓰면 된다. */}
+      {
+        postTitle.map(function (a, i) { // i는 반복문 돌 때 마다 0부터 1씩 증가하는 정수
+          return (
+            <div className="list" key={i}>
+              <h4>{postTitle[i]}
+                <span onClick={()=>{
+                  let likeCopy = {...like};
+                  likeCopy[i] = likeCopy[i] + 1; 
+                  setLike(likeCopy)
+                  
+                  }}>👍</span>{like[i]}
+              </h4>
+              <p>2월 17일 발행</p>
+            </div>
+             
+          )
+        })
+      }
 
       {/* 동적 UI */}
-
       {
         //html 안에선 if문 대신 삼항연산자 사용
         // 조건식 ? 참일 때 실행할 코드 : 거짓일 때 실행할 코드
         modal == true ? <Modal /> : null
       }
-
-
-
-
-
 
       <Nav></Nav>
       <Footer></Footer>
@@ -120,13 +107,14 @@ function Modal() {
   return (
     <>
       <div className="modal">
-        <h4>제목</h4>
+        <h4>글제목</h4>
         <p>날짜</p>
         <p>상세내용</p>
       </div>
     </>
   ) // return EnD
 }
+
 
 
 // 내가 만들어 본 컴포넌트
