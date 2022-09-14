@@ -11,9 +11,14 @@ function App() { // <- 이것도 컴포넌트
   // state 쓰던 html 자동 재렌더링 됨
   // 자주 변경 될 데이터를 state를 이용해 바인딩 한다. 
   let [postTitle, setPostTitle] = useState(['남자 코트 추천', '강남 우동 맛집', '파이썬독학']);
+  let [postContent, setPostContent] = useState(['여기 코트 좋아요', '우동 맛집이네요', '열심히 해봅시다.']);
+  let [postDate, setPostDate] = useState(['2022-04-11', '2022-05-06', '2022-07-19']);
+
+
   let [like, setLike] = useState([0, 0, 0]); // set*** : state 변경 함수
   let [modal, setModal] = useState(false); //modal창이 안보이는 상태(기본) : false
-  
+  let [postIDX, setPostIDX] = useState(0);
+
   return (
     <div className="App">
       <div className="black-nav">
@@ -55,28 +60,39 @@ function App() { // <- 이것도 컴포넌트
 
       {/* 비슷한 html 반복생성하려면 map() 쓰면 된다. */}
       {
-        postTitle.map(function (a, i) { // i는 반복문 돌 때 마다 0부터 1씩 증가하는 정수
+        postTitle.map(function (a, i) { // a는 postTitle에 들어있는 값, i는 반복문 돌 때 마다 0부터 1씩 증가하는 정수
           return (
             <div className="list" key={i}>
-              <h4 onClick={ ()=>{setModal(true)}} >{postTitle[i]}
+              <h4 onClick={ ()=>{setModal(true); setPostIDX(i); } } >{postTitle[i]}
                 <span onClick={() => {
                     let likeCopy = { ...like };
                     likeCopy[i] = likeCopy[i] + 1;
                     setLike(likeCopy)
                   }}>👍</span>{like[i]}
               </h4>
-              <p>2월 17일 발행</p>
+              <p>{postContent[i]}</p>
+              <p>{postDate[i]}</p>
             </div>
-
           )
+          // return console.log(a, i)
+          
         })
+        
       }
 
       {/* 동적 UI */}
       {
         //html 안에선 if문 대신 삼항연산자 사용
         // 조건식 ? 참일 때 실행할 코드 : 거짓일 때 실행할 코드
-        modal == true ? <Modal setPostTitle={setPostTitle} color={"yellow"} postTitle={postTitle} /> : null
+        modal == true ?
+        <Modal
+        postTitle={postTitle}
+        postContent={postContent}
+        postDate={postDate}
+        postIDX={postIDX}
+        setPostTitle={setPostTitle}
+        color={"yellow"}/>
+        : null // false일때 null
       }
 
       <Nav></Nav>
@@ -104,17 +120,16 @@ function App() { // <- 이것도 컴포넌트
 // 3. state에 따라 UI가 어떻게 보일지 작성
 
 function Modal(props) {
-  // props.postTitle.map(function(a, i){
-  // })
   return (
     <>
       <div className="modal" style={{background : props.color}}>
-        <h4>{props.postTitle[0]}</h4>
-        <p>날짜</p>
-        <p>상세내용</p>
+        <h4>{props.postTitle[props.postIDX]}</h4>
+        <p>{props.postContent[props.postIDX]}</p>
+        <p>{props.postDate[props.postIDX]}</p>
+
         <button onClick={ ()=>{ 
           let postTitleCopy = [...props.postTitle];
-          postTitleCopy[0] = '여자코트 추천';
+          postTitleCopy[props.postIDX] = '여자 코트 추천';
           props.setPostTitle(postTitleCopy) }}>글 수정</button>
       </div>
     </>
