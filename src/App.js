@@ -67,7 +67,7 @@ function App() { // <- 이것도 컴포넌트
               <h4 onClick={ ()=>{setModal(true); setPostIDX(i); } } >{postTitle[i]}
                 <span onClick={(e) => {
                     e.stopPropagation(); // 이벤트 버블링 막아준다; 이벤트 실행시 상위 태그까지 실행되는것 없으면, 이벤트가 div까지 전달됨
-                    let likeCopy = { ...like };
+                    let likeCopy = [...like];
                     likeCopy[i] = likeCopy[i] + 1;
                     setLike(likeCopy);
 
@@ -103,9 +103,11 @@ function App() { // <- 이것도 컴포넌트
 
         let likeCopy = [...like]; // deep copy
         likeCopy.unshift(0); // deep copy 한 배열에 0 추가
-
+        
         setLike(likeCopy);
         setPostTitle(postTitleCopy);
+
+        console.log(like);
         }
       }>글 발행</button>
 
